@@ -2,7 +2,31 @@ const express = require('express');
 const app = express();
 const wppconnect = require('@wppconnect-team/wppconnect');
 var whatsappclient;
-
+var banner=`
+                                                                                                                                                      
+                                                                                                                                                      
+                                                                                                   tttt                                               
+                                                                                                ttt:::t                                               
+                                                                                                t:::::t                                               
+                                                                                                t:::::t                                               
+  aaaaaaaaaaaaawwwwwww           wwwww           wwwwwww cccccccccccccccc  aaaaaaaaaaaaa  ttttttt:::::ttttttt       ooooooooooo   rrrrr   rrrrrrrrr   
+  a::::::::::::aw:::::w         w:::::w         w:::::wcc:::::::::::::::c  a::::::::::::a t:::::::::::::::::t     oo:::::::::::oo r::::rrr:::::::::r  
+  aaaaaaaaa:::::aw:::::w       w:::::::w       w:::::wc:::::::::::::::::c  aaaaaaaaa:::::at:::::::::::::::::t    o:::::::::::::::or:::::::::::::::::r 
+           a::::a w:::::w     w:::::::::w     w:::::wc:::::::cccccc:::::c           a::::atttttt:::::::tttttt    o:::::ooooo:::::orr::::::rrrrr::::::r
+    aaaaaaa:::::a  w:::::w   w:::::w:::::w   w:::::w c::::::c     ccccccc    aaaaaaa:::::a      t:::::t          o::::o     o::::o r:::::r     r:::::r
+  aa::::::::::::a   w:::::w w:::::w w:::::w w:::::w  c:::::c               aa::::::::::::a      t:::::t          o::::o     o::::o r:::::r     rrrrrrr
+ a::::aaaa::::::a    w:::::w:::::w   w:::::w:::::w   c:::::c              a::::aaaa::::::a      t:::::t          o::::o     o::::o r:::::r            
+a::::a    a:::::a     w:::::::::w     w:::::::::w    c::::::c     ccccccca::::a    a:::::a      t:::::t    tttttto::::o     o::::o r:::::r            
+a::::a    a:::::a      w:::::::w       w:::::::w     c:::::::cccccc:::::ca::::a    a:::::a      t::::::tttt:::::to:::::ooooo:::::o r:::::r            
+a:::::aaaa::::::a       w:::::w         w:::::w       c:::::::::::::::::ca:::::aaaa::::::a      tt::::::::::::::to:::::::::::::::o r:::::r            
+ a::::::::::aa:::a       w:::w           w:::w         cc:::::::::::::::c a::::::::::aa:::a       tt:::::::::::tt oo:::::::::::oo  r:::::r            
+  aaaaaaaaaa  aaaa        www             www            cccccccccccccccc  aaaaaaaaaa  aaaa         ttttttttttt     ooooooooooo    rrrrrrr            
+                                                                                                                                                      
+                                                                                                                                                      
+                                                                                                                                                      
+                                                                                                                                                      
+                                                                                                                                                      
+                                                                                                                                                      `;
 app.use(express.json());//parser used for requests via post,
 app.use(express.urlencoded({ extended : true }));
 
@@ -36,7 +60,8 @@ async function startWPP (){
 
 //Api Hoooks
 async function start(client) {
-	wc = client; //It will be used in REST requests
+	whatsappclient = client; //It will be used in REST requests
+	console.log(banner);
 	client.onMessage( async (message) => {
 		console.log(message);
 	}); 
@@ -51,6 +76,8 @@ async function start(client) {
 }
 
 //API Stuff
+
+//curl  http://localhost:6969/getconnectionstatus
 app.get('/getconnectionstatus', async function (req, res) {
 	console.log("Requested connection status");
 	var response =''; // request return message
@@ -75,4 +102,5 @@ app.get('/getconnectionstatus', async function (req, res) {
 startWPP(); //call function to initialize the lib  wppconnect-team/wppconnect
 const api_port = '6969'; 
 var server = app.listen(api_port);
-console.log('Server Intitaled at localhost:%s', server.address().port);
+console.log('API Server started at localhost:%s', server.address().port);
+
