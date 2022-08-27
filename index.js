@@ -1,18 +1,19 @@
+const request = require('request');
 const express = require('express');
 const app = express();
 const wppconnect = require('@wppconnect-team/wppconnect');
 var whatsappclient;
 var banner=`
-                                                                                                                                                      
-                                                                                                                                                      
-                                                                                                   tttt                                               
-                                                                                                ttt:::t                                               
-                                                                                                t:::::t                                               
-                                                                                                t:::::t                                               
+
+
+												   tttt                                               
+												ttt:::t                                               
+												t:::::t                                               
+												t:::::t                                               
   aaaaaaaaaaaaawwwwwww           wwwww           wwwwwww cccccccccccccccc  aaaaaaaaaaaaa  ttttttt:::::ttttttt       ooooooooooo   rrrrr   rrrrrrrrr   
   a::::::::::::aw:::::w         w:::::w         w:::::wcc:::::::::::::::c  a::::::::::::a t:::::::::::::::::t     oo:::::::::::oo r::::rrr:::::::::r  
   aaaaaaaaa:::::aw:::::w       w:::::::w       w:::::wc:::::::::::::::::c  aaaaaaaaa:::::at:::::::::::::::::t    o:::::::::::::::or:::::::::::::::::r 
-           a::::a w:::::w     w:::::::::w     w:::::wc:::::::cccccc:::::c           a::::atttttt:::::::tttttt    o:::::ooooo:::::orr::::::rrrrr::::::r
+	   a::::a w:::::w     w:::::::::w     w:::::wc:::::::cccccc:::::c           a::::atttttt:::::::tttttt    o:::::ooooo:::::orr::::::rrrrr::::::r
     aaaaaaa:::::a  w:::::w   w:::::w:::::w   w:::::w c::::::c     ccccccc    aaaaaaa:::::a      t:::::t          o::::o     o::::o r:::::r     r:::::r
   aa::::::::::::a   w:::::w w:::::w w:::::w w:::::w  c:::::c               aa::::::::::::a      t:::::t          o::::o     o::::o r:::::r     rrrrrrr
  a::::aaaa::::::a    w:::::w:::::w   w:::::w:::::w   c:::::c              a::::aaaa::::::a      t:::::t          o::::o     o::::o r:::::r            
@@ -21,12 +22,12 @@ a::::a    a:::::a      w:::::::w       w:::::::w     c:::::::cccccc:::::ca::::a 
 a:::::aaaa::::::a       w:::::w         w:::::w       c:::::::::::::::::ca:::::aaaa::::::a      tt::::::::::::::to:::::::::::::::o r:::::r            
  a::::::::::aa:::a       w:::w           w:::w         cc:::::::::::::::c a::::::::::aa:::a       tt:::::::::::tt oo:::::::::::oo  r:::::r            
   aaaaaaaaaa  aaaa        www             www            cccccccccccccccc  aaaaaaaaaa  aaaa         ttttttttttt     ooooooooooo    rrrrrrr            
-                                                                                                                                                      
-                                                                                                                                                      
-                                                                                                                                                      
-                                                                                                                                                      
-                                                                                                                                                      
-                                                                                                                                                      `;
+
+
+
+
+
+																		      `;
 app.use(express.json());//parser used for requests via post,
 app.use(express.urlencoded({ extended : true }));
 
@@ -63,13 +64,29 @@ async function start(client) {
 	whatsappclient = client; //It will be used in REST requests
 	console.log(banner);
 	client.onMessage( async (message) => {
-		console.log(message);
+		console.log(message)
+		request.post(
+			"localhost:5555",
+			{
+				json: message,
+				maxAttempts: 2,
+				retryDelay: 1000,
+				retryStrategy: request.RetryStrategies.HTTPOrNetworkError
+			},
+			(error, res, body) => {
+				if (error) {
+					this.log.error(error)
+					return
+				}
+				this.log.log(`POST request was sent with status code: ${res.statusCode}`)
+				this.log.verbose(`Response: ${JSON.stringify(body)}`)
+			})
 	}); 
-	
+
 	client.onAck(ack => {
 
 	});
-	
+
 	client.onStateChange( async (state) => {
 
 	});
